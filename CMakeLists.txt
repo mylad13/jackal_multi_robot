@@ -2,7 +2,7 @@
 # Set minimum required version of cmake, project name and compile options
 ################################################################################
 cmake_minimum_required(VERSION 3.5)
-project(turtlebot3_multi_robot)
+project(jackal_multi_robot)
 
 
 ################################################################################
