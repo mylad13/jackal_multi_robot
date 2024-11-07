@@ -15,7 +15,7 @@
   <depend>rclcpp</depend>
   <depend>sensor_msgs</depend>
   <depend>tf2</depend>
-  <--! depend>turtlebot3_navigation2</depend -->
+  <!-- depend>turtlebot3_navigation2</depend -->
   <build_depend>nav2_common</build_depend>
   <build_depend>navigation2</build_depend>
   <build_depend>launch_ros</build_depend>
@@ -24,7 +24,7 @@
   <exec_depend>nav2_common</exec_depend>
   <exec_depend>slam_toolbox</exec_depend>
 
-<--! these are added from the jackal_gazebo package -->
+<!-- these are added from the jackal_gazebo package -->
   <exec_depend>gazebo_plugins</exec_depend>
   <exec_depend>gazebo_ros</exec_depend>
   <exec_depend>gazebo_ros2_control</exec_depend>
