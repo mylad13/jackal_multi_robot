@@ -158,7 +158,7 @@ def generate_launch_description():
             # Create spawn call
             spawn_jackal = Node(
                 package="gazebo_ros",
-                executable="spawn_entity.py,
+                executable="spawn_entity.py",
                 arguments=[
                     "-topic",
                     'robot_description',
