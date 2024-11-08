@@ -25,6 +25,8 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
 from launch.event_handlers import OnProcessExit
 from launch.conditions import IfCondition
+from launch.substitutions import PathJoinSubstitution, FindExecutable
+from launch_ros.substitutions import FindPackageShare
 
 
 def generate_launch_description():
@@ -38,20 +40,58 @@ def generate_launch_description():
     )
 
 
-    turtlebot3_multi_robot = get_package_share_directory("turtlebot3_multi_robot")
-    launch_file_dir = os.path.join(turtlebot3_multi_robot, "launch")
+    jackal_multi_robot = get_package_share_directory("jackal_multi_robot")
+    # launch_file_dir = os.path.join(turtlebot3_multi_robot, "launch")
 
+    # Legacy Turtlebot3 world file (package renamed to jackal_mutli_robot)
     world = os.path.join(
-        turtlebot3_multi_robot, "worlds", "multi_empty_world.world"
+        jackal_multi_robot, "worlds", "multi_empty_world.world"
     )
 
-    urdf_file_name = "turtlebot3_" + TURTLEBOT3_MODEL + ".urdf"
-    print("urdf_file_name : {}".format(urdf_file_name))
+    ## Jackal world file 
+    # world = PathJoinSubstitution(
+    #     [FindPackageShare('jackal_gazebo'),
+    #     'worlds',
+    #     'jackal_race.world'],
+    # )
 
-    urdf = os.path.join(
-        turtlebot3_multi_robot, "urdf", urdf_file_name
+    config_jackal_velocity_controller = PathJoinSubstitution(
+        [FindPackageShare('jackal_control'), 'config', 'control.yaml']
     )
+    
+    # Get URDF via xacro
+    robot_description_command = [
+            PathJoinSubstitution([FindExecutable(name='xacro')]),
+            ' ',
+            PathJoinSubstitution(
+                [FindPackageShare('jackal_description'), 'urdf', 'jackal.urdf.xacro']
+            ),
+            ' ',
+            'is_sim:=true',
+            ' ',
+            'gazebo_controllers:=',
+            config_jackal_velocity_controller,
+        ]
+    
+    launch_jackal_description = IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(
+                PathJoinSubstitution(
+                    [FindPackageShare('jackal_description'),
+                     'launch',
+                     'description.launch.py']
+                )
+            ),
+            launch_arguments=[('robot_description_command', robot_description_command)]
+        )
+    
+    # urdf_file_name = "turtlebot3_" + TURTLEBOT3_MODEL + ".urdf"
+    # print("urdf_file_name : {}".format(urdf_file_name))
 
+    # urdf = os.path.join(
+    #     turtlebot3_multi_robot, "urdf", urdf_file_name
+    # )
+    
+    # Gazebo server and client (launch file)
     gzserver_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(get_package_share_directory("gazebo_ros"), "launch", "gzserver.launch.py")
@@ -65,12 +105,28 @@ def generate_launch_description():
         ),
     )
 
+    # # Gazebo server and client (direct execution)
+    # gzserver = ExecuteProcess(
+    #     cmd=['gzserver',
+    #          '-s', 'libgazebo_ros_init.so',
+    #          '-s', 'libgazebo_ros_factory.so',
+    #          '--verbose',
+    #          world_path],
+    #     output='screen',
+    # )
+    # gzclient = ExecuteProcess(
+    #     cmd=['gzclient'],
+    #     output='screen',
+    # )
+
+    
+
     ld.add_action(declare_enable_drive)
     ld.add_action(gzserver_cmd)
     ld.add_action(gzclient_cmd)
 
-    ROWS = 5
-    COLS = 5
+    ROWS = 3
+    COLS = 1
 
     x = -ROWS
     y = -COLS
@@ -84,28 +140,28 @@ def generate_launch_description():
         x = -ROWS
         for j in range(ROWS):
             # Construct a unique name and namespace
-            name = "turtlebot" + str(i) + "_" + str(j)
-            namespace = "/tb" + str(i) + "_" + str(j)
+            name = "jackal" + str(i) + "_" + str(j)
+            namespace = "/jc" + str(i) + "_" + str(j)
 
             # Create state publisher node for that instance
-            turtlebot_state_publisher = Node(
+            jackal_state_publisher = Node(
                 package="robot_state_publisher",
                 namespace=namespace,
                 executable="robot_state_publisher",
                 output="screen",
                 parameters=[{"use_sim_time": False,
-                             "publish_frequency": 10.0}],
+                             "publish_frequency": 10.0,
+                             'robot_description': robot_description_command}],
                 remappings=remappings,
-                arguments=[urdf],
             )
 
             # Create spawn call
-            spawn_turtlebot3_burger = Node(
+            spawn_jackal = Node(
                 package="gazebo_ros",
-                executable="spawn_entity.py",
+                executable="spawn_entity",
                 arguments=[
-                    "-file",
-                    os.path.join(turtlebot3_multi_robot,'models', 'turtlebot3_' + TURTLEBOT3_MODEL, 'model.sdf'),
+                    "-topic",
+                    'robot_description',
                     "-entity",
                     name,
                     "-robot_namespace",
@@ -128,23 +184,23 @@ def generate_launch_description():
 
             if last_action is None:
                 # Call add_action directly for the first robot to facilitate chain instantiation via RegisterEventHandler
-                ld.add_action(turtlebot_state_publisher)
-                ld.add_action(spawn_turtlebot3_burger)
+                ld.add_action(jackal_state_publisher)
+                ld.add_action(spawn_jackal)
                 
             else:
                 # Use RegisterEventHandler to ensure next robot creation happens only after the previous one is completed.
                 # Simply calling ld.add_action for spawn_entity introduces issues due to parallel run.
-                spawn_turtlebot3_event = RegisterEventHandler(
+                spawn_jackal_event = RegisterEventHandler(
                     event_handler=OnProcessExit(
                         target_action=last_action,
-                        on_exit=[spawn_turtlebot3_burger,
-                                 turtlebot_state_publisher],
+                        on_exit=[spawn_jackal,
+                                 jackal_state_publisher],
                     )
                 )
-                ld.add_action(spawn_turtlebot3_event)
+                ld.add_action(spawn_jackal_event)
 
             # Save last instance for next RegisterEventHandler
-            last_action = spawn_turtlebot3_burger
+            last_action = spawn_jackal
 
         # Advance by 2 meter in y direction for next robot instantiation
         y += 2.0
@@ -153,24 +209,43 @@ def generate_launch_description():
     for i in range(COLS):
         for j in range(ROWS):
             namespace = "/tb" + str(i) + "_" + str(j)
-            # Create spawn call
-            drive_turtlebot3_burger = Node(
-                package="turtlebot3_gazebo",
-                executable="turtlebot3_drive",
-                namespace=namespace,
-                output="screen",
-                condition=IfCondition(enable_drive),
-            )
-
-            # Use RegisterEventHandler to ensure next robot creation happens only after the previous one is completed.
-            # Simply calling ld.add_action for spawn_entity introduces issues due to parallel run.
-            drive_turtlebot3_event = RegisterEventHandler(
-                event_handler=OnProcessExit(
-                    target_action=last_action,
-                    on_exit=[drive_turtlebot3_burger],
-                )
-            )
             
-            ld.add_action(drive_turtlebot3_event)
+            # Launch jackal_control/control.launch.py
+            launch_jackal_control = IncludeLaunchDescription(
+                    PythonLaunchDescriptionSource(PathJoinSubstitution(
+                        [FindPackageShare('jackal_control'), 'launch', 'control.launch.py']
+                    )),
+                    launch_arguments=[('robot_description_command', robot_description_command),
+                                    ('is_sim', 'True')]
+                )
+
+            # Launch jackal_control/teleop_base.launch.py which is various ways to tele-op
+            # the robot but does not include the joystick. Also, has a twist mux.
+            launch_jackal_teleop_base = IncludeLaunchDescription(
+                PythonLaunchDescriptionSource(PathJoinSubstitution(
+                [FindPackageShare('jackal_control'), 'launch', 'teleop_base.launch.py'])))
+            
+            #TODO: add the control drives
+
+            
+            # # Create spawn call
+            # drive_turtlebot3_burger = Node(
+            #     package="turtlebot3_gazebo",
+            #     executable="turtlebot3_drive",
+            #     namespace=namespace,
+            #     output="screen",
+            #     condition=IfCondition(enable_drive),
+            # )
+
+            # # Use RegisterEventHandler to ensure next robot creation happens only after the previous one is completed.
+            # # Simply calling ld.add_action for spawn_entity introduces issues due to parallel run.
+            # drive_turtlebot3_event = RegisterEventHandler(
+            #     event_handler=OnProcessExit(
+            #         target_action=last_action,
+            #         on_exit=[drive_turtlebot3_burger],
+            #     )
+            # )
+            
+            # ld.add_action(drive_turtlebot3_event)
 
     return ld
