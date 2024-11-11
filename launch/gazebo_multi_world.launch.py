@@ -57,38 +57,6 @@ def generate_launch_description():
         [FindPackageShare('jackal_control'), 'config', 'control.yaml']
     )
     
-    # Get URDF via xacro
-    robot_description_command = [
-            PathJoinSubstitution([FindExecutable(name='xacro')]),
-            ' ',
-            PathJoinSubstitution(
-                [FindPackageShare('jackal_description'), 'urdf', 'jackal.urdf.xacro']
-            ),
-            ' ',
-            'is_sim:=true',
-            ' ',
-            'gazebo_controllers:=',
-            config_jackal_velocity_controller,
-        ]
-    
-    print("robot_description_command is: ", robot_description_command)
-
-    robot_description_content = ParameterValue(
-        Command(robot_description_command),
-        value_type=str
-    )
-    print("robot_description_content is: ", robot_description_content)
-    
-    # launch_jackal_description = IncludeLaunchDescription(
-    #         PythonLaunchDescriptionSource(
-    #             PathJoinSubstitution(
-    #                 [FindPackageShare('jackal_description'),
-    #                  'launch',
-    #                  'description.launch.py']
-    #             )
-    #         ),
-    #         launch_arguments=[('robot_description_command', robot_description_command)]
-    #     )
 
     # Gazebo server and client (launch file)
     gzserver_cmd = IncludeLaunchDescription(
@@ -142,6 +110,26 @@ def generate_launch_description():
             name = "jackal" + str(i) + "_" + str(j)
             namespace = "/jc" + str(i) + "_" + str(j)
 
+            # Get URDF via xacro
+            robot_description_command = [
+                    PathJoinSubstitution([FindExecutable(name='xacro')]),
+                    ' ',
+                    PathJoinSubstitution(
+                        [FindPackageShare('jackal_description'), 'urdf', 'jackal.urdf.xacro']
+                    ),
+                    ' ',
+                    'is_sim:=true',
+                    'prefix:=',
+                    namespace,
+                    'gazebo_controllers:=',
+                    config_jackal_velocity_controller,
+                ]
+            
+
+            robot_description_content = ParameterValue(
+                Command(robot_description_command),
+                value_type=str
+            )
             # Create state publisher node for that instance
             jackal_state_publisher = Node(
                 package="robot_state_publisher",
@@ -207,7 +195,7 @@ def generate_launch_description():
     # Start all driving nodes after the last robot is spawned
     for i in range(COLS):
         for j in range(ROWS):
-            namespace = "/tb" + str(i) + "_" + str(j)
+            namespace = "/jc" + str(i) + "_" + str(j)
             
             # Launch jackal_control/control.launch.py
             launch_jackal_control = IncludeLaunchDescription(
