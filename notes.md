@@ -156,6 +156,13 @@ I am committing this container once again to **x11swarmjackal**
 ---
 ## jackal_multi_robot package
 
+clone the repo into /jackal_ws/src, then go back into jackal_ws and run
+```bash
+rosdep install --from-paths src -r -y
+colcon build
+source ~/.bashrc
+```
+
 Errors with gzserver might be fixed by
 ```bash
 killall gzclient && killall gzserver
@@ -165,3 +172,6 @@ if killall is not there, install it by
 sudo apt-get update
 sudo apt-get install psmisc
 ```
+Facing errors when loading "gazebo_ros2_control":
+``` [gzserver-1] [INFO] [1731356611.586901413] [gazebo_ros2_control]: Loading gazebo_ros2_control plugin ```
+I think we need to replace the gazebo_ros2_control plugin with gz_ros2_control plugin, which is compatible with non-classic versions of gazebo...
