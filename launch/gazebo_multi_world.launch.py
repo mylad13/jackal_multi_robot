@@ -78,16 +78,17 @@ def generate_launch_description():
         value_type=str
     )
     print("robot_description_content is: ", robot_description_content)
-    launch_jackal_description = IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(
-                PathJoinSubstitution(
-                    [FindPackageShare('jackal_description'),
-                     'launch',
-                     'description.launch.py']
-                )
-            ),
-            launch_arguments=[('robot_description_command', robot_description_command)]
-        )
+    
+    # launch_jackal_description = IncludeLaunchDescription(
+    #         PythonLaunchDescriptionSource(
+    #             PathJoinSubstitution(
+    #                 [FindPackageShare('jackal_description'),
+    #                  'launch',
+    #                  'description.launch.py']
+    #             )
+    #         ),
+    #         launch_arguments=[('robot_description_command', robot_description_command)]
+    #     )
 
     # Gazebo server and client (launch file)
     gzserver_cmd = IncludeLaunchDescription(
@@ -149,7 +150,7 @@ def generate_launch_description():
                 output="screen",
                 parameters=[{"use_sim_time": False,
                              "publish_frequency": 10.0,
-                             'robot_description': robot_description_command}],
+                             'robot_description': robot_description_content}],
                 remappings=remappings,
             )
 
