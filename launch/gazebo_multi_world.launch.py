@@ -20,14 +20,15 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, RegisterEventHandler
 from launch.substitutions import LaunchConfiguration
-from launch.actions import IncludeLaunchDescription
+from launch.actions import IncludeLaunchDescription, SetEnvironmentVariable
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
 from launch.event_handlers import OnProcessExit
 from launch.conditions import IfCondition
 from launch.substitutions import PathJoinSubstitution, FindExecutable, Command
-from launch_ros.substitutions import FindPackageShare
+from launch_ros.substitutions import FindPackageShare, EnvironmentVariable
 from launch_ros.parameter_descriptions import ParameterValue
+from pathlib import Path
 
 def generate_launch_description():
     ld = LaunchDescription()
@@ -37,7 +38,13 @@ def generate_launch_description():
         name="enable_drive", default_value="true", description="Enable robot drive node"
     )
 
-
+    gz_resource_path = SetEnvironmentVariable(name='GAZEBO_MODEL_PATH', value=[
+                                                    EnvironmentVariable('GAZEBO_MODEL_PATH',
+                                                                        default_value=''),
+                                                    '/usr/share/gazebo-11/models/:',
+                                                    str(Path(get_package_share_directory('jackal_description')).
+                                                        parent.resolve())])
+    
     jackal_multi_robot = get_package_share_directory("jackal_multi_robot")
     # launch_file_dir = os.path.join(turtlebot3_multi_robot, "launch")
 
@@ -87,7 +94,7 @@ def generate_launch_description():
     # )
 
     
-
+    ld.add_action(gz_resource_path)
     ld.add_action(declare_enable_drive)
     ld.add_action(gzserver_cmd)
     ld.add_action(gzclient_cmd)
