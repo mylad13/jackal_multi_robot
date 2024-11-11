@@ -25,14 +25,12 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
 from launch.event_handlers import OnProcessExit
 from launch.conditions import IfCondition
-from launch.substitutions import PathJoinSubstitution, FindExecutable
+from launch.substitutions import PathJoinSubstitution, FindExecutable, Command
 from launch_ros.substitutions import FindPackageShare
-
+from launch_ros.parameter_descriptions import ParameterValue
 
 def generate_launch_description():
     ld = LaunchDescription()
-
-    TURTLEBOT3_MODEL = "burger"
 
     enable_drive = LaunchConfiguration("enable_drive", default="true")
     declare_enable_drive = DeclareLaunchArgument(
@@ -73,6 +71,13 @@ def generate_launch_description():
             config_jackal_velocity_controller,
         ]
     
+    print("robot_description_command is: ", robot_description_command)
+
+    robot_description_content = ParameterValue(
+        Command(robot_description_command),
+        value_type=str
+    )
+    print("robot_description_content is: ", robot_description_content)
     launch_jackal_description = IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
                 PathJoinSubstitution(
@@ -83,14 +88,7 @@ def generate_launch_description():
             ),
             launch_arguments=[('robot_description_command', robot_description_command)]
         )
-    
-    # urdf_file_name = "turtlebot3_" + TURTLEBOT3_MODEL + ".urdf"
-    # print("urdf_file_name : {}".format(urdf_file_name))
 
-    # urdf = os.path.join(
-    #     turtlebot3_multi_robot, "urdf", urdf_file_name
-    # )
-    
     # Gazebo server and client (launch file)
     gzserver_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
