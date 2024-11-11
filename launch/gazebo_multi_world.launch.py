@@ -119,10 +119,12 @@ def generate_launch_description():
                     ),
                     ' ',
                     'is_sim:=true',
-                    'prefix:=',
-                    namespace,
+                    '',
                     'gazebo_controllers:=',
                     config_jackal_velocity_controller,
+                    '',
+                    'prefix:=',
+                    namespace,
                 ]
             
 
