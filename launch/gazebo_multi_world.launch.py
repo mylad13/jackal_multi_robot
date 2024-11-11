@@ -160,7 +160,7 @@ def generate_launch_description():
                 executable="spawn_entity.py",
                 arguments=[
                     "-topic",
-                    'robot_description',
+                    f"{namespace}/robot_description",
                     "-entity",
                     name,
                     "-robot_namespace",
