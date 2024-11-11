@@ -25,8 +25,8 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
 from launch.event_handlers import OnProcessExit
 from launch.conditions import IfCondition
-from launch.substitutions import PathJoinSubstitution, FindExecutable, Command
-from launch_ros.substitutions import FindPackageShare, EnvironmentVariable
+from launch.substitutions import PathJoinSubstitution, FindExecutable, Command, EnvironmentVariable
+from launch_ros.substitutions import FindPackageShare
 from launch_ros.parameter_descriptions import ParameterValue
 from pathlib import Path
 
