@@ -112,20 +112,20 @@ def generate_launch_description():
 
             # Get URDF via xacro
             robot_description_command = [
-                    PathJoinSubstitution([FindExecutable(name='xacro')]),
-                    ' ',
-                    PathJoinSubstitution(
-                        [FindPackageShare('jackal_description'), 'urdf', 'jackal.urdf.xacro']
-                    ),
-                    ' ',
-                    'is_sim:=true',
-                    '',
-                    'gazebo_controllers:=',
-                    config_jackal_velocity_controller,
-                    '',
-                    'prefix:=',
-                    namespace,
-                ]
+                PathJoinSubstitution([FindExecutable(name='xacro')]),
+                ' ',
+                PathJoinSubstitution(
+                    [FindPackageShare('jackal_description'), 'urdf', 'jackal.urdf.xacro']
+                ),
+                ' ',
+                'is_sim:=true',
+                ' ',
+                'prefix:=',  # Pass the namespace as the prefix argument
+                namespace,
+                ' ',
+                'gazebo_controllers:=',
+                config_jackal_velocity_controller,
+            ]
             
 
             robot_description_content = ParameterValue(
