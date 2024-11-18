@@ -195,6 +195,7 @@ def generate_launch_description():
                             {'node_names': lifecycle_nodes}]),
         ]
     )
+# nav2_collision_monitor and opennav_docking are removed from this launch file compared to navigation2/nav_bringup
 
     load_composable_nodes = LoadComposableNodes(
         condition=IfCondition(use_composition),

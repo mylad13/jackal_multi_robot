@@ -174,4 +174,5 @@ sudo apt-get install psmisc
 ```
 Facing errors when loading "gazebo_ros2_control":
 ``` [gzserver-1] [INFO] [1731356611.586901413] [gazebo_ros2_control]: Loading gazebo_ros2_control plugin ```
-I think we need to replace the gazebo_ros2_control plugin with gz_ros2_control plugin, which is compatible with non-classic versions of gazebo...
+I think we need to replace the gazebo_ros2_control plugin with gz_ros2_control plugin, which is compatible with non-classic versions of gazebo...[documentation here](https://github.com/ros-controls/gz_ros2_control/blob/humble/doc/index.rst)
+I did some research regarding navigation of Jackals in ROS2 humble, and came upon these official instructions from clearpath robotics for [simulation, localization, and navigation of their robots](https://docs.clearpathrobotics.com/docs/ros/tutorials/navigation_demos/nav2). This is still not multi-robot, but their packages may be used as inspiration for building our jackal_multi_robot package. Similar ideas already exist in jackal_navigation package though.
