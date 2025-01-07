@@ -221,6 +221,9 @@ def generate_launch_description():
                 PythonLaunchDescriptionSource(PathJoinSubstitution(
                 [FindPackageShare('jackal_control'), 'launch', 'teleop_base.launch.py'])))
             
+            ld.add_action(launch_jackal_control)
+            ld.add_action(launch_jackal_teleop_base) # this will probably not work since I am not specifying the namespace
+
             #TODO: add the control drives
 
             
