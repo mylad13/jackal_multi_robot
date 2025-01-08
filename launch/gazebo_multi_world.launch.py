@@ -205,7 +205,24 @@ def generate_launch_description():
     for i in range(COLS):
         for j in range(ROWS):
             namespace = "/jc" + str(i) + "_" + str(j)
-            
+
+            # Get URDF via xacro
+            robot_description_command = [
+                PathJoinSubstitution([FindExecutable(name='xacro')]),
+                ' ',
+                PathJoinSubstitution(
+                    [FindPackageShare('jackal_description'), 'urdf', 'jackal.urdf.xacro']
+                ),
+                ' ',
+                'is_sim:=true',
+                ' ',
+                'prefix:=',  # Pass the namespace as the prefix argument
+                namespace,
+                ' ',
+                'gazebo_controllers:=',
+                config_jackal_velocity_controller,
+            ]
+
             # Launch jackal_control/control.launch.py
             launch_jackal_control = IncludeLaunchDescription(
                     PythonLaunchDescriptionSource(PathJoinSubstitution(
@@ -224,27 +241,5 @@ def generate_launch_description():
             ld.add_action(launch_jackal_control)
             ld.add_action(launch_jackal_teleop_base) # this will probably not work since I am not specifying the namespace
 
-            #TODO: add the control drives
-
-            
-            # # Create spawn call
-            # drive_turtlebot3_burger = Node(
-            #     package="turtlebot3_gazebo",
-            #     executable="turtlebot3_drive",
-            #     namespace=namespace,
-            #     output="screen",
-            #     condition=IfCondition(enable_drive),
-            # )
-
-            # # Use RegisterEventHandler to ensure next robot creation happens only after the previous one is completed.
-            # # Simply calling ld.add_action for spawn_entity introduces issues due to parallel run.
-            # drive_turtlebot3_event = RegisterEventHandler(
-            #     event_handler=OnProcessExit(
-            #         target_action=last_action,
-            #         on_exit=[drive_turtlebot3_burger],
-            #     )
-            # )
-            
-            # ld.add_action(drive_turtlebot3_event)
 
     return ld

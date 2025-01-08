@@ -159,9 +159,10 @@ I am committing this container once again to **x11swarmjackal**
 clone the repo into /jackal_ws/src, then go back into jackal_ws and run
 ```bash
 rosdep install --from-paths src -r -y
-colcon build
+colcon build --symlink-install
 source ~/.bashrc
 ```
+You don't need to execute colcon build every time you change your python code if you include the option --symlink-install.
 
 Errors with gzserver might be fixed by
 ```bash
