@@ -38,12 +38,12 @@ def generate_launch_description():
         name="enable_drive", default_value="true", description="Enable robot drive node"
     )
 
-    gz_resource_path = SetEnvironmentVariable(name='GAZEBO_MODEL_PATH', value=[
-                                                    EnvironmentVariable('GAZEBO_MODEL_PATH',
-                                                                        default_value=''),
-                                                    '/usr/share/gazebo-11/models/:',
-                                                    str(Path(get_package_share_directory('jackal_description')).
-                                                        parent.resolve())])
+    # gz_resource_path = SetEnvironmentVariable(name='GAZEBO_MODEL_PATH', value=[
+    #                                                 EnvironmentVariable('GAZEBO_MODEL_PATH',
+    #                                                                     default_value=''),
+    #                                                 '/usr/share/gazebo-11/models/:',
+    #                                                 str(Path(get_package_share_directory('jackal_description')).
+    #                                                     parent.resolve())])
     
     jackal_multi_robot = get_package_share_directory("jackal_multi_robot")
     # launch_file_dir = os.path.join(turtlebot3_multi_robot, "launch")
@@ -94,7 +94,7 @@ def generate_launch_description():
     # )
 
     
-    ld.add_action(gz_resource_path)
+    # ld.add_action(gz_resource_path)
     ld.add_action(declare_enable_drive)
     ld.add_action(gzserver_cmd)
     ld.add_action(gzclient_cmd)
@@ -133,12 +133,12 @@ def generate_launch_description():
                 'gazebo_controllers:=',
                 config_jackal_velocity_controller,
             ]
-            
 
             robot_description_content = ParameterValue(
                 Command(robot_description_command),
                 value_type=str
             )
+
             # Create state publisher node for that instance
             jackal_state_publisher = Node(
                 package="robot_state_publisher",
@@ -174,7 +174,16 @@ def generate_launch_description():
                 ],
                 output="screen",
             )
-
+            
+            # Launch jackal_control/control.launch.py
+            launch_jackal_control = IncludeLaunchDescription(
+                    PythonLaunchDescriptionSource(PathJoinSubstitution(
+                        [FindPackageShare('jackal_control'), 'launch', 'control.launch.py']
+                    )),
+                    launch_arguments=[('robot_description_command', robot_description_command),
+                                    ('is_sim', 'True')]
+                )
+            
             # Advance by 2 meter in x direction for next robot instantiation
             x += 2.0
 
@@ -182,6 +191,7 @@ def generate_launch_description():
                 # Call add_action directly for the first robot to facilitate chain instantiation via RegisterEventHandler
                 ld.add_action(jackal_state_publisher)
                 ld.add_action(spawn_jackal)
+                ld.add_action(launch_jackal_control)
                 
             else:
                 # Use RegisterEventHandler to ensure next robot creation happens only after the previous one is completed.
@@ -190,7 +200,8 @@ def generate_launch_description():
                     event_handler=OnProcessExit(
                         target_action=last_action,
                         on_exit=[spawn_jackal,
-                                 jackal_state_publisher],
+                                 jackal_state_publisher,
+                                 launch_jackal_control],
                     )
                 )
                 ld.add_action(spawn_jackal_event)
@@ -201,45 +212,45 @@ def generate_launch_description():
         # Advance by 2 meter in y direction for next robot instantiation
         y += 2.0
 
-    # Start all driving nodes after the last robot is spawned
-    for i in range(COLS):
-        for j in range(ROWS):
-            namespace = "/jc" + str(i) + "_" + str(j)
+    # # Start all driving nodes after the last robot is spawned
+    # for i in range(COLS):
+    #     for j in range(ROWS):
+    #         namespace = "/jc" + str(i) + "_" + str(j)
 
-            # Get URDF via xacro
-            robot_description_command = [
-                PathJoinSubstitution([FindExecutable(name='xacro')]),
-                ' ',
-                PathJoinSubstitution(
-                    [FindPackageShare('jackal_description'), 'urdf', 'jackal.urdf.xacro']
-                ),
-                ' ',
-                'is_sim:=true',
-                ' ',
-                'prefix:=',  # Pass the namespace as the prefix argument
-                namespace,
-                ' ',
-                'gazebo_controllers:=',
-                config_jackal_velocity_controller,
-            ]
+    #         # Get URDF via xacro
+    #         robot_description_command = [
+    #             PathJoinSubstitution([FindExecutable(name='xacro')]),
+    #             ' ',
+    #             PathJoinSubstitution(
+    #                 [FindPackageShare('jackal_description'), 'urdf', 'jackal.urdf.xacro']
+    #             ),
+    #             ' ',
+    #             'is_sim:=true',
+    #             ' ',
+    #             'prefix:=',  # Pass the namespace as the prefix argument
+    #             namespace,
+    #             ' ',
+    #             'gazebo_controllers:=',
+    #             config_jackal_velocity_controller,
+    #         ]
 
-            # Launch jackal_control/control.launch.py
-            launch_jackal_control = IncludeLaunchDescription(
-                    PythonLaunchDescriptionSource(PathJoinSubstitution(
-                        [FindPackageShare('jackal_control'), 'launch', 'control.launch.py']
-                    )),
-                    launch_arguments=[('robot_description_command', robot_description_command),
-                                    ('is_sim', 'True')]
-                )
+    #         # Launch jackal_control/control.launch.py
+    #         launch_jackal_control = IncludeLaunchDescription(
+    #                 PythonLaunchDescriptionSource(PathJoinSubstitution(
+    #                     [FindPackageShare('jackal_control'), 'launch', 'control.launch.py']
+    #                 )),
+    #                 launch_arguments=[('robot_description_command', robot_description_command),
+    #                                 ('is_sim', 'True')]
+    #             )
 
-            # Launch jackal_control/teleop_base.launch.py which is various ways to tele-op
-            # the robot but does not include the joystick. Also, has a twist mux.
-            launch_jackal_teleop_base = IncludeLaunchDescription(
-                PythonLaunchDescriptionSource(PathJoinSubstitution(
-                [FindPackageShare('jackal_control'), 'launch', 'teleop_base.launch.py'])))
+    #         # Launch jackal_control/teleop_base.launch.py which is various ways to tele-op
+    #         # the robot but does not include the joystick. Also, has a twist mux.
+    #         launch_jackal_teleop_base = IncludeLaunchDescription(
+    #             PythonLaunchDescriptionSource(PathJoinSubstitution(
+    #             [FindPackageShare('jackal_control'), 'launch', 'teleop_base.launch.py'])))
             
-            ld.add_action(launch_jackal_control)
-            ld.add_action(launch_jackal_teleop_base) # this will probably not work since I am not specifying the namespace
+    #         ld.add_action(launch_jackal_control)
+    #         ld.add_action(launch_jackal_teleop_base) # this will probably not work since I am not specifying the namespace
 
 
     return ld
