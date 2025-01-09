@@ -184,7 +184,13 @@ def generate_launch_description():
                                     ('is_sim', 'True'),
                                     ('namespace', namespace)]
                 )
-            
+                # Launch jackal_control/teleop_base.launch.py which is various ways to tele-op
+            # the robot but does not include the joystick. Also, has a twist mux.
+            launch_jackal_teleop_base = IncludeLaunchDescription(
+                PythonLaunchDescriptionSource(PathJoinSubstitution(
+                [FindPackageShare('jackal_control'), 'launch', 'teleop_base.launch.py'])),
+                launch_arguments=['namespace', namespace]
+                )
             # Advance by 2 meter in x direction for next robot instantiation
             x += 2.0
 
@@ -193,6 +199,7 @@ def generate_launch_description():
                 ld.add_action(jackal_state_publisher)
                 ld.add_action(spawn_jackal)
                 ld.add_action(launch_jackal_control)
+                ld.add_action(launch_jackal_teleop_base)
                 
             else:
                 # Use RegisterEventHandler to ensure next robot creation happens only after the previous one is completed.
@@ -202,7 +209,8 @@ def generate_launch_description():
                         target_action=last_action,
                         on_exit=[spawn_jackal,
                                  jackal_state_publisher,
-                                 launch_jackal_control],
+                                 launch_jackal_control,
+                                 launch_jackal_teleop_base],
                     )
                 )
                 ld.add_action(spawn_jackal_event)
@@ -212,46 +220,6 @@ def generate_launch_description():
 
         # Advance by 2 meter in y direction for next robot instantiation
         y += 2.0
-
-    # # Start all driving nodes after the last robot is spawned
-    # for i in range(COLS):
-    #     for j in range(ROWS):
-    #         namespace = "/jc" + str(i) + "_" + str(j)
-
-    #         # Get URDF via xacro
-    #         robot_description_command = [
-    #             PathJoinSubstitution([FindExecutable(name='xacro')]),
-    #             ' ',
-    #             PathJoinSubstitution(
-    #                 [FindPackageShare('jackal_description'), 'urdf', 'jackal.urdf.xacro']
-    #             ),
-    #             ' ',
-    #             'is_sim:=true',
-    #             ' ',
-    #             'prefix:=',  # Pass the namespace as the prefix argument
-    #             namespace,
-    #             ' ',
-    #             'gazebo_controllers:=',
-    #             config_jackal_velocity_controller,
-    #         ]
-
-    #         # Launch jackal_control/control.launch.py
-    #         launch_jackal_control = IncludeLaunchDescription(
-    #                 PythonLaunchDescriptionSource(PathJoinSubstitution(
-    #                     [FindPackageShare('jackal_control'), 'launch', 'control.launch.py']
-    #                 )),
-    #                 launch_arguments=[('robot_description_command', robot_description_command),
-    #                                 ('is_sim', 'True')]
-    #             )
-
-    #         # Launch jackal_control/teleop_base.launch.py which is various ways to tele-op
-    #         # the robot but does not include the joystick. Also, has a twist mux.
-    #         launch_jackal_teleop_base = IncludeLaunchDescription(
-    #             PythonLaunchDescriptionSource(PathJoinSubstitution(
-    #             [FindPackageShare('jackal_control'), 'launch', 'teleop_base.launch.py'])))
-            
-    #         ld.add_action(launch_jackal_control)
-    #         ld.add_action(launch_jackal_teleop_base) # this will probably not work since I am not specifying the namespace
 
 
     return ld
