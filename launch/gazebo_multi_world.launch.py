@@ -175,7 +175,57 @@ def generate_launch_description():
                 output="screen",
             )
             
-            # Launch jackal_control/control.launch.py #TODO: make sure namespace is passed correctly
+            # Advance by 2 meter in x direction for next robot instantiation
+            x += 2.0
+
+            if last_action is None:
+                # Call add_action directly for the first robot to facilitate chain instantiation via RegisterEventHandler
+                ld.add_action(jackal_state_publisher)
+                ld.add_action(spawn_jackal)
+                
+            else:
+                # Use RegisterEventHandler to ensure next robot creation happens only after the previous one is completed.
+                # Simply calling ld.add_action for spawn_entity introduces issues due to parallel run.
+                spawn_jackal_event = RegisterEventHandler(
+                    event_handler=OnProcessExit(
+                        target_action=last_action,
+                        on_exit=[spawn_jackal,
+                                 jackal_state_publisher],
+                    )
+                )
+                ld.add_action(spawn_jackal_event)
+
+            # Save last instance for next RegisterEventHandler
+            last_action = spawn_jackal
+
+        # Advance by 2 meter in y direction for next robot instantiation
+        y += 2.0
+
+    # Start controllers after all robots are spawned
+    for i in range(COLS):
+        for j in range(ROWS):
+            
+            # Construct a unique namespace for each robot
+            namespace = "/jc" + str(i) + "_" + str(j)
+
+            # Get URDF via xacro
+            robot_description_command = [
+                PathJoinSubstitution([FindExecutable(name='xacro')]),
+                ' ',
+                PathJoinSubstitution(
+                    [FindPackageShare('jackal_description'), 'urdf', 'jackal.urdf.xacro']
+                ),
+                ' ',
+                'is_sim:=true',
+                ' ',
+                'prefix:=',  # Pass the namespace as the prefix argument
+                namespace,
+                ' ',
+                'gazebo_controllers:=',
+                config_jackal_velocity_controller,
+            ]
+
+            # Launch jackal_control/control.launch.py
             launch_jackal_control = IncludeLaunchDescription(
                     PythonLaunchDescriptionSource(PathJoinSubstitution(
                         [FindPackageShare('jackal_control'), 'launch', 'control.launch.py']
@@ -191,35 +241,14 @@ def generate_launch_description():
                 [FindPackageShare('jackal_control'), 'launch', 'teleop_base.launch.py'])),
                 launch_arguments=[('namespace', namespace)]
                 )
-            # Advance by 2 meter in x direction for next robot instantiation
-            x += 2.0
 
-            if last_action is None:
-                # Call add_action directly for the first robot to facilitate chain instantiation via RegisterEventHandler
-                ld.add_action(jackal_state_publisher)
-                ld.add_action(spawn_jackal)
-                ld.add_action(launch_jackal_control)
-                ld.add_action(launch_jackal_teleop_base)
-                
-            else:
-                # Use RegisterEventHandler to ensure next robot creation happens only after the previous one is completed.
-                # Simply calling ld.add_action for spawn_entity introduces issues due to parallel run.
-                spawn_jackal_event = RegisterEventHandler(
-                    event_handler=OnProcessExit(
-                        target_action=last_action,
-                        on_exit=[spawn_jackal,
-                                 jackal_state_publisher,
-                                 launch_jackal_control,
-                                 launch_jackal_teleop_base],
-                    )
+            control_jackal_event = RegisterEventHandler(
+                event_handler=OnProcessExit(
+                    target_action=last_action,
+                    on_exit=[launch_jackal_control,
+                             launch_jackal_teleop_base],
                 )
-                ld.add_action(spawn_jackal_event)
-
-            # Save last instance for next RegisterEventHandler
-            last_action = spawn_jackal
-
-        # Advance by 2 meter in y direction for next robot instantiation
-        y += 2.0
-
+            )
+            ld.add_action(control_jackal_event)
 
     return ld

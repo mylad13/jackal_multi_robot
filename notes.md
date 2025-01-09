@@ -180,6 +180,7 @@ I did some research regarding navigation of Jackals in ROS2 humble, and came upo
 
 ---
 Good information about control of robots in Gazebo using ros2_control [here](https://articulatedrobotics.xyz/tutorials/mobile-robot/applications/ros2_control-concepts/).
+IMPORTANT: Install [ros2_controllers for humble](https://control.ros.org/humble/doc/getting_started/getting_started.html)
 ---
 
 - Dev Containers extension for VSCode may be helpful in working with docker containers.
