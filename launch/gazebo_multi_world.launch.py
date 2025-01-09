@@ -145,7 +145,7 @@ def generate_launch_description():
                 namespace=namespace,
                 executable="robot_state_publisher",
                 output="screen",
-                parameters=[{"use_sim_time": False,
+                parameters=[{"use_sim_time": True, # This was set to false in the original implementation, why?
                              "publish_frequency": 10.0,
                              'robot_description': robot_description_content}],
                 remappings=remappings,
