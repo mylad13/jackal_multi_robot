@@ -24,13 +24,13 @@
   <exec_depend>nav2_common</exec_depend>
   <exec_depend>slam_toolbox</exec_depend>
 
-<!-- these are added from the jackal_gazebo package -->
-  <!-- <exec_depend>gazebo_plugins</exec_depend>
+  <exec_depend>gazebo_plugins</exec_depend>
   <exec_depend>gazebo_ros</exec_depend>
-  <exec_depend>gz_ros2_control</exec_depend>
+  <exec_depend>ign_ros2_control</exec_depend>
+  <!-- <exec_depend>gazebo_ros2_control</exec_depend> -->
   <exec_depend>jackal_control</exec_depend>
   <exec_depend>jackal_description</exec_depend>
-  <exec_depend>ros2launch</exec_depend> -->
+  <exec_depend>ros2launch</exec_depend>
 
 
   <export>

@@ -189,7 +189,7 @@ def generate_launch_description():
             launch_jackal_teleop_base = IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(PathJoinSubstitution(
                 [FindPackageShare('jackal_control'), 'launch', 'teleop_base.launch.py'])),
-                launch_arguments=['namespace', namespace]
+                launch_arguments=[('namespace', namespace)]
                 )
             # Advance by 2 meter in x direction for next robot instantiation
             x += 2.0
