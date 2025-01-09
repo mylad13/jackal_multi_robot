@@ -38,12 +38,12 @@ def generate_launch_description():
         name="enable_drive", default_value="true", description="Enable robot drive node"
     )
 
-    # gz_resource_path = SetEnvironmentVariable(name='GAZEBO_MODEL_PATH', value=[
-    #                                                 EnvironmentVariable('GAZEBO_MODEL_PATH',
-    #                                                                     default_value=''),
-    #                                                 '/usr/share/gazebo-11/models/:',
-    #                                                 str(Path(get_package_share_directory('jackal_description')).
-    #                                                     parent.resolve())])
+    gz_resource_path = SetEnvironmentVariable(name='GAZEBO_MODEL_PATH', value=[
+                                                    EnvironmentVariable('GAZEBO_MODEL_PATH',
+                                                                        default_value=''),
+                                                    '/usr/share/gazebo-11/models/:',
+                                                    str(Path(get_package_share_directory('jackal_description')).
+                                                        parent.resolve())])
     
     jackal_multi_robot = get_package_share_directory("jackal_multi_robot")
     # launch_file_dir = os.path.join(turtlebot3_multi_robot, "launch")
@@ -94,7 +94,7 @@ def generate_launch_description():
     # )
 
     
-    # ld.add_action(gz_resource_path)
+    ld.add_action(gz_resource_path)
     ld.add_action(declare_enable_drive)
     ld.add_action(gzserver_cmd)
     ld.add_action(gzclient_cmd)
@@ -175,13 +175,14 @@ def generate_launch_description():
                 output="screen",
             )
             
-            # Launch jackal_control/control.launch.py
+            # Launch jackal_control/control.launch.py #TODO: make sure namespace is passed correctly
             launch_jackal_control = IncludeLaunchDescription(
                     PythonLaunchDescriptionSource(PathJoinSubstitution(
                         [FindPackageShare('jackal_control'), 'launch', 'control.launch.py']
                     )),
                     launch_arguments=[('robot_description_command', robot_description_command),
-                                    ('is_sim', 'True')]
+                                    ('is_sim', 'True'),
+                                    ('namespace', namespace)]
                 )
             
             # Advance by 2 meter in x direction for next robot instantiation
