@@ -92,9 +92,17 @@ https://github.com/MISTLab/Swarm-SLAM/issues/2
 
 
 ---
-## mylad13/jackal_multi_robot repo and mylad13/jackal repo
-
-clone the repo into /ros2_ws/src
+Good information about control of robots in Gazebo using ros2_control [here](https://articulatedrobotics.xyz/tutorials/mobile-robot/applications/ros2_control-concepts/).
+An example launch file for ros2_control is [here](https://github.com/ros-controls/ros2_control_demos/blob/humble/example_2/bringup/launch/diffbot.launch.py).
+IMPORTANT: Install [ros2_controllers for humble](https://control.ros.org/humble/doc/getting_started/getting_started.html)
+using keyboard teleop, make sure to set the topic and stamped parameters correctly:
+```bash
+ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args --remap cmd_vel:=my_cmd_vel -p stamped:=True 
+```
+---
+# Starting from the container mylad13/humble-ros2controllers
+### mylad13/jackal_multi_robot repo and mylad13/jackal repo
+clone the repos into /ros2_ws/src
 ```bash
 git clone https://github.com/mylad13/jackal_multi_robot
 git clone https://github.com/mylad13/jackal -b humble-devel
@@ -106,6 +114,8 @@ or
 rosdep install --from-paths src --ignore-src -r -y
 source /ros2_ws/install/setup.bash
 colcon build --symlink-install
+source /ros2_ws/install/setup.bash
+
 
 ```
 You don't need to execute colcon build every time you change your python code if you include the option --symlink-install.
@@ -140,14 +150,6 @@ However, this still leads to the following problem:
 ```
 Still working on a solution to this problem... I think the solution is in the way we install the controller_manager package. We should be able to launch the spawner using spawner.py
 
----
-Good information about control of robots in Gazebo using ros2_control [here](https://articulatedrobotics.xyz/tutorials/mobile-robot/applications/ros2_control-concepts/).
-An example launch file for ros2_control is [here](https://github.com/ros-controls/ros2_control_demos/blob/humble/example_2/bringup/launch/diffbot.launch.py).
-IMPORTANT: Install [ros2_controllers for humble](https://control.ros.org/humble/doc/getting_started/getting_started.html)
-using keyboard teleop, make sure to set the topic and stamped parameters correctly:
-```bash
-ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args --remap cmd_vel:=my_cmd_vel -p stamped:=True 
-```
 ---
 
 - Dev Containers extension for VSCode may be helpful in working with docker containers.
