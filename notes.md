@@ -156,11 +156,16 @@ I am committing this container once again to **x11swarmjackal**
 ---
 ## jackal_multi_robot package
 
-clone the repo into /jackal_ws/src, then go back into jackal_ws and run
+clone the repo into /ros2_ws/src, then go back into ros2_ws and run
 ```bash
 rosdep install --from-paths src -r -y
+or
+rosdep install --from-paths src --ignore-src --rosdistro humble -y
+or 
+rosdep install --from-paths src --ignore-src -r -y
+source /ros2_2s/install/setup.bash
 colcon build --symlink-install
-source ~/.bashrc
+
 ```
 You don't need to execute colcon build every time you change your python code if you include the option --symlink-install.
 
@@ -180,7 +185,12 @@ I did some research regarding navigation of Jackals in ROS2 humble, and came upo
 
 ---
 Good information about control of robots in Gazebo using ros2_control [here](https://articulatedrobotics.xyz/tutorials/mobile-robot/applications/ros2_control-concepts/).
+An example launch file for ros2_control is [here](https://github.com/ros-controls/ros2_control_demos/blob/humble/example_2/bringup/launch/diffbot.launch.py).
 IMPORTANT: Install [ros2_controllers for humble](https://control.ros.org/humble/doc/getting_started/getting_started.html)
+using keyboard teleop, make sure to set the topic and stamped parameters correctly:
+```bash
+ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args --remap cmd_vel:=my_cmd_vel -p stamped:=True 
+```
 ---
 
 - Dev Containers extension for VSCode may be helpful in working with docker containers.
