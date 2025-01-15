@@ -68,7 +68,7 @@ def generate_launch_description():
     # Gazebo server and client (launch file)
     gzserver_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(get_package_share_directory("ros_ign_gazebo"), "launch", "ign_gazebo.launch.py")
+            os.path.join(get_package_share_directory("ros_ign_gazebo"), "launch", "gz_sim.launch.py")
         ),
         launch_arguments={"world": world}.items(),
     )
