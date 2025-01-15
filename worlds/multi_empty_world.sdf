@@ -4,14 +4,14 @@
 
     <!-- Include ground plane -->
     <include>
-      <uri>https://fuel.ignitionrobotics.org/1.0/OpenRobotics/models/Ground Plane</uri>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Ground Plane</uri>
     </include>
 
     <!-- Include sun -->
     <include>
-      <uri>https://fuel.ignitionrobotics.org/1.0/OpenRobotics/models/Default Sun</uri>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Sun</uri>
     </include>
-
+    
     <!-- Scene settings -->
     <scene>
       <shadows>false</shadows>
