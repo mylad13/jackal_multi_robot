@@ -68,16 +68,16 @@ def generate_launch_description():
     # Gazebo server and client (launch file)
     gzserver_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(get_package_share_directory("gazebo_ros"), "launch", "gzserver.launch.py")
+            os.path.join(get_package_share_directory("ros_ign_gazebo"), "launch", "gzserver.launch.py")
         ),
         launch_arguments={"world": world}.items(),
     )
 
-    gzclient_cmd = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(get_package_share_directory("gazebo_ros"), "launch", "gzclient.launch.py")
-        ),
-    )
+    # gzclient_cmd = IncludeLaunchDescription(
+    #     PythonLaunchDescriptionSource(
+    #         os.path.join(get_package_share_directory("ros_ign_gazebo"), "launch", "gzclient.launch.py")
+    #     ),
+    # )
 
     # # Gazebo server and client (direct execution)
     # gzserver = ExecuteProcess(
@@ -97,7 +97,7 @@ def generate_launch_description():
     ld.add_action(gz_resource_path)
     ld.add_action(declare_enable_drive)
     ld.add_action(gzserver_cmd)
-    ld.add_action(gzclient_cmd)
+    # ld.add_action(gzclient_cmd)
 
     ROWS = 3
     COLS = 1
