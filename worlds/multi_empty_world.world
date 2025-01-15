@@ -9,6 +9,14 @@
     <include>
       <uri>model://sun</uri>
     </include>
+    
+    <!-- <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Sun</uri>
+    </include>
+ 
+    <include>
+      <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Ground Plane</uri>
+    </include> -->
 
     <scene>
       <shadows>false</shadows>

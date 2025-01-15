@@ -73,25 +73,6 @@ def generate_launch_description():
         launch_arguments={"ign_args": world}.items(),
     )
 
-    # gzclient_cmd = IncludeLaunchDescription(
-    #     PythonLaunchDescriptionSource(
-    #         os.path.join(get_package_share_directory("ros_ign_gazebo"), "launch", "gzclient.launch.py")
-    #     ),
-    # )
-
-    # # Gazebo server and client (direct execution)
-    # gzserver = ExecuteProcess(
-    #     cmd=['gzserver',
-    #          '-s', 'libgazebo_ros_init.so',
-    #          '-s', 'libgazebo_ros_factory.so',
-    #          '--verbose',
-    #          world_path],
-    #     output='screen',
-    # )
-    # gzclient = ExecuteProcess(
-    #     cmd=['gzclient'],
-    #     output='screen',
-    # )
 
     
     ld.add_action(gz_resource_path)
