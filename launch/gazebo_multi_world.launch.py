@@ -109,7 +109,7 @@ def generate_launch_description():
     # Remapping is required for state publisher otherwise /tf and /tf_static will get be published on root '/' namespace
     remappings = [("/tf", "tf"), ("/tf_static", "tf_static")]
 
-    # Spawn turtlebot3 instances in gazebo
+    # Spawn jackal instances in gazebo
     for i in range(COLS):
         x = -ROWS
         for j in range(ROWS):
@@ -225,28 +225,48 @@ def generate_launch_description():
                 config_jackal_velocity_controller,
             ]
 
-            # Launch jackal_control/control.launch.py
-            launch_jackal_control = IncludeLaunchDescription(
-                    PythonLaunchDescriptionSource(PathJoinSubstitution(
-                        [FindPackageShare('jackal_control'), 'launch', 'control.launch.py']
-                    )),
-                    launch_arguments=[('robot_description_command', robot_description_command),
-                                    ('is_sim', 'True'),
-                                    ('namespace', namespace)]
-                )
-                # Launch jackal_control/teleop_base.launch.py which is various ways to tele-op
-            # the robot but does not include the joystick. Also, has a twist mux.
-            launch_jackal_teleop_base = IncludeLaunchDescription(
-                PythonLaunchDescriptionSource(PathJoinSubstitution(
-                [FindPackageShare('jackal_control'), 'launch', 'teleop_base.launch.py'])),
-                launch_arguments=[('namespace', namespace)]
-                )
+            # Add the velocity_controller spawner
+            velocity_controller_node = Node(
+                package='controller_manager',
+                executable='spawner',
+                name='velocity_controller_spawner',
+                namespace=namespace,
+                output='screen',
+                arguments=['jackal_velocity_controller']
+            )
+
+            
+            # Add the joint_state_broadcaster spawner
+            joint_state_broadcaster_node = Node(
+                package='controller_manager',
+                executable='spawner',
+                name='joint_state_broadcaster_spawner',
+                namespace=namespace,
+                output='screen',
+                arguments=['joint_state_broadcaster']
+            )
+            # # Launch jackal_control/control.launch.py
+            # launch_jackal_control = IncludeLaunchDescription(
+            #         PythonLaunchDescriptionSource(PathJoinSubstitution(
+            #             [FindPackageShare('jackal_control'), 'launch', 'control.launch.py']
+            #         )),
+            #         launch_arguments=[('robot_description_command', robot_description_command),
+            #                         ('is_sim', 'True'),
+            #                         ('namespace', namespace)]
+            #     )
+            #     # Launch jackal_control/teleop_base.launch.py which is various ways to tele-op
+            # # the robot but does not include the joystick. Also, has a twist mux.
+            # launch_jackal_teleop_base = IncludeLaunchDescription(
+            #     PythonLaunchDescriptionSource(PathJoinSubstitution(
+            #     [FindPackageShare('jackal_control'), 'launch', 'teleop_base.launch.py'])),
+            #     launch_arguments=[('namespace', namespace)]
+            #     )
 
             control_jackal_event = RegisterEventHandler(
                 event_handler=OnProcessExit(
                     target_action=last_action,
-                    on_exit=[launch_jackal_control,
-                             launch_jackal_teleop_base],
+                    on_exit=[velocity_controller_node,
+                             joint_state_broadcaster_node],
                 )
             )
             ld.add_action(control_jackal_event)
