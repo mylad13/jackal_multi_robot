@@ -38,8 +38,8 @@ def generate_launch_description():
         name="enable_drive", default_value="true", description="Enable robot drive node"
     )
 
-    gz_resource_path = SetEnvironmentVariable(name='GAZEBO_MODEL_PATH', value=[
-                                                    EnvironmentVariable('GAZEBO_MODEL_PATH',
+    gz_resource_path = SetEnvironmentVariable(name='IGN_GAZEBO_RESOURCE_PATH', value=[
+                                                    EnvironmentVariable('IGN_GAZEBO_RESOURCE_PATH',
                                                                         default_value=''),
                                                     '/usr/share/gazebo-11/models/:',
                                                     str(Path(get_package_share_directory('jackal_description')).
