@@ -93,8 +93,11 @@ https://github.com/MISTLab/Swarm-SLAM/issues/2
 
 ---
 Good information about control of robots in Gazebo using ros2_control [here](https://articulatedrobotics.xyz/tutorials/mobile-robot/applications/ros2_control-concepts/).
+
 An example launch file for ros2_control is [here](https://github.com/ros-controls/ros2_control_demos/blob/humble/example_2/bringup/launch/diffbot.launch.py).
+
 IMPORTANT: Install [ros2_controllers for humble](https://control.ros.org/humble/doc/getting_started/getting_started.html)
+
 Installing teleop_twist_keyboard:
 ```bash
 apt-get install ros-humble-teleop-twist-keyboard
@@ -106,7 +109,7 @@ ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args --remap cmd_vel:
 ---
 # Starting from the container mylad13/humble-ros2controllers
 ### mylad13/jackal_multi_robot repo and mylad13/jackal repo
-clone the repos into /ros2_ws/src
+clone the repos into ~/ros2_ws/src (these steps are already done, and ros-humble-ros2-controllers and ros-humble-ros2-control are installed from binary, and the humble branch of gz_ros2_control is installed from source)
 ```bash
 git clone https://github.com/mylad13/jackal_multi_robot
 git clone https://github.com/mylad13/jackal -b humble-devel
@@ -116,11 +119,8 @@ git clone https://github.com/mylad13/jackal -b humble-devel
 rosdep install --from-paths src --ignore-src --rosdistro humble -y
 or 
 rosdep install --from-paths src --ignore-src -r -y
-source /ros2_ws/install/setup.bash
 colcon build --symlink-install
-source /ros2_ws/install/setup.bash
-
-
+source ~/ros2_ws/install/setup.bash
 ```
 You don't need to execute colcon build every time you change your python code if you include the option --symlink-install.
 
@@ -138,21 +138,6 @@ Facing errors when loading "gazebo_ros2_control":
 We need to replace the gazebo_ros2_control plugin with ign_ros2_control plugin (for humble), which is compatible with ignition gazebo fortress...[documentation here](https://github.com/ros-controls/gz_ros2_control/blob/humble/doc/index.rst)
 
 Official instructions from clearpath robotics for [simulation, localization, and navigation of their robots](https://docs.clearpathrobotics.com/docs/ros/tutorials/navigation_demos/nav2). This is still not multi-robot, but their packages may be used as inspiration for building our jackal_multi_robot package. Similar ideas already exist in the jackal_navigation package though.
-
-Attempting to launch jackal_multi_robot gazebo_multi_world.launch.py leads to this error:
-``` [ERROR] [launch]: Caught exception in launch (see debug for traceback): executable 'spawner.py' not found on the libexec directory '/ros2_ws/install/controller_manager/lib/controller_manager'  ```
-
-One way to bypass this error is to edit /ros2_ws/src/jackal/jackal_control/launch/control.launch.py to change instances of ``` spawner.py ``` to ``` spawner ```.
-However, this still leads to the following problem:
-```bash
-[spawner-23] [INFO] [1736802344.851553594] [jc0_0.spawner_joint_state_broadcaster]: waiting for service /jc0_0/controller_manager/list_controllers to become available...
-[spawner-11] [INFO] [1736802344.859737537] [jc0_2.spawner_joint_state_broadcaster]: waiting for service /jc0_2/controller_manager/list_controllers to become available...
-[spawner-18] [INFO] [1736802344.868593203] [jc0_1.velocity_controller_spawner]: waiting for service /jc0_1/controller_manager/list_controllers to become available...
-[spawner-12] [INFO] [1736802344.873344951] [jc0_2.velocity_controller_spawner]: waiting for service /jc0_2/controller_manager/list_controllers to become available...
-[spawner-17] [INFO] [1736802344.874915305] [jc0_1.spawner_joint_state_broadcaster]: waiting for service /jc0_1/controller_manager/list_controllers to become available...
-[spawner-24] [INFO] [1736802344.877673923] [jc0_0.velocity_controller_spawner]: waiting for service /jc0_0/controller_manager/list_controllers to become available...
-```
-Still working on a solution to this problem... I think the solution is in the way we install the controller_manager package. We should be able to launch the spawner using spawner.py
 
 ---
 
