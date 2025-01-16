@@ -63,7 +63,7 @@ def generate_launch_description():
         PythonLaunchDescriptionSource(
             os.path.join(get_package_share_directory("ros_ign_gazebo"), "launch", "ign_gazebo.launch.py")
         ),
-        launch_arguments={"ign_args": ['-r' + world]}.items(),
+        launch_arguments={"ign_args": '-r ' + world}.items(),
     )
 
 
