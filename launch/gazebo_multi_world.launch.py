@@ -123,8 +123,8 @@ def generate_launch_description():
                 parameters=[{"use_sim_time": False, # This was set to false in the original implementation, why?
                             # }],
                              "publish_frequency": 10.0,
-                             'robot_description': robot_description_content,
-                             'frame_prefix': ''.join(frame_prefix)}],
+                             'robot_description': robot_description_content}],
+                            #  'frame_prefix': ''.join(frame_prefix)}],
                 remappings=remappings,
             )
 
@@ -183,7 +183,7 @@ def generate_launch_description():
     #     for j in range(ROWS):
             
     #         # Construct a unique namespace for each robot
-    #         namespace = "/jc" + str(i) + "_" + str(j)
+    #         namespace = "jc" + str(i) + "_" + str(j)
 
     #         # Get URDF via xacro
     #         robot_description_command = [
