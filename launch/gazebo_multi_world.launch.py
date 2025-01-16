@@ -130,13 +130,12 @@ def generate_launch_description():
             spawn_jackal = Node(
                 package="ros_ign_gazebo",
                 executable="create",
+                namespace=namespace,
                 arguments=[
                     "-topic",
                     f"{namespace}/robot_description",
                     "-name",
                     name,
-                    "-robot_namespace",
-                    namespace,
                     "-x",
                     str(x),
                     "-y",
@@ -157,7 +156,6 @@ def generate_launch_description():
                 # Call add_action directly for the first robot to facilitate chain instantiation via RegisterEventHandler
                 ld.add_action(jackal_state_publisher)
                 ld.add_action(spawn_jackal)
-                print("Spawned jackal with name: ", name)
 
                 
             else:
@@ -171,7 +169,6 @@ def generate_launch_description():
                     )
                 )
                 ld.add_action(spawn_jackal_event)
-                print("Spawned jackal with name: ", name)
 
             # Save last instance for next RegisterEventHandler
             last_action = spawn_jackal
