@@ -117,7 +117,7 @@ def generate_launch_description():
             # Create state publisher node for that instance
             jackal_state_publisher = Node(
                 package="robot_state_publisher",
-                # namespace=namespace,
+                namespace=namespace,
                 executable="robot_state_publisher",
                 output="screen",
                 parameters=[{"use_sim_time": False, # This was set to false in the original implementation, why?
@@ -134,7 +134,8 @@ def generate_launch_description():
                 namespace=namespace,
                 arguments=[
                     "-topic",
-                    f"{namespace}/robot_description",
+                    f"robot_description",
+                    # f"{namespace}/robot_description",
                     "-name",
                     name,
                     "-x",
