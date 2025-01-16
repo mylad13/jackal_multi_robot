@@ -176,74 +176,74 @@ def generate_launch_description():
         # Advance by 2 meter in y direction for next robot instantiation
         y += 2.0
 
-    # Start controllers after all robots are spawned
-    for i in range(COLS):
-        for j in range(ROWS):
+    # # Start controllers after all robots are spawned
+    # for i in range(COLS):
+    #     for j in range(ROWS):
             
-            # Construct a unique namespace for each robot
-            namespace = "/jc" + str(i) + "_" + str(j)
+    #         # Construct a unique namespace for each robot
+    #         namespace = "/jc" + str(i) + "_" + str(j)
 
-            # Get URDF via xacro
-            robot_description_command = [
-                PathJoinSubstitution([FindExecutable(name='xacro')]),
-                ' ',
-                PathJoinSubstitution(
-                    [FindPackageShare('jackal_description'), 'urdf', 'jackal.urdf.xacro']
-                ),
-                ' ',
-                'is_sim:=true',
-                ' ',
-                'prefix:=',  # Pass the namespace as the prefix argument
-                namespace,
-                ' ',
-                'gazebo_controllers:=',
-                config_jackal_velocity_controller,
-            ]
+    #         # Get URDF via xacro
+    #         robot_description_command = [
+    #             PathJoinSubstitution([FindExecutable(name='xacro')]),
+    #             ' ',
+    #             PathJoinSubstitution(
+    #                 [FindPackageShare('jackal_description'), 'urdf', 'jackal.urdf.xacro']
+    #             ),
+    #             ' ',
+    #             'is_sim:=true',
+    #             ' ',
+    #             'prefix:=',  # Pass the namespace as the prefix argument
+    #             namespace,
+    #             ' ',
+    #             'gazebo_controllers:=',
+    #             config_jackal_velocity_controller,
+    #         ]
 
-            # # Add the velocity_controller spawner
-            # velocity_controller_node = Node(
-            #     package='controller_manager',
-            #     executable='spawner',
-            #     name='velocity_controller_spawner',
-            #     namespace=namespace,
-            #     output='screen',
-            #     arguments=['jackal_velocity_controller']
-            # )
+    #         # # Add the velocity_controller spawner
+    #         # velocity_controller_node = Node(
+    #         #     package='controller_manager',
+    #         #     executable='spawner',
+    #         #     name='velocity_controller_spawner',
+    #         #     namespace=namespace,
+    #         #     output='screen',
+    #         #     arguments=['jackal_velocity_controller']
+    #         # )
 
             
-            # # Add the joint_state_broadcaster spawner
-            # joint_state_broadcaster_node = Node(
-            #     package='controller_manager',
-            #     executable='spawner',
-            #     name='joint_state_broadcaster_spawner',
-            #     namespace=namespace,
-            #     output='screen',
-            #     arguments=['joint_state_broadcaster']
-            # )
-            # Launch jackal_control/control.launch.py
-            launch_jackal_control = IncludeLaunchDescription(
-                    PythonLaunchDescriptionSource(PathJoinSubstitution(
-                        [FindPackageShare('jackal_control'), 'launch', 'control.launch.py']
-                    )),
-                    launch_arguments=[('robot_description_command', robot_description_command),
-                                    ('is_sim', 'True'),
-                                    ('namespace', namespace)]
-                )
-                # Launch jackal_control/teleop_base.launch.py which is various ways to tele-op
-            # the robot but does not include the joystick. Also, has a twist mux.
-            launch_jackal_teleop_base = IncludeLaunchDescription(
-                PythonLaunchDescriptionSource(PathJoinSubstitution(
-                [FindPackageShare('jackal_control'), 'launch', 'teleop_base.launch.py'])),
-                launch_arguments=[('namespace', namespace)]
-                )
+    #         # # Add the joint_state_broadcaster spawner
+    #         # joint_state_broadcaster_node = Node(
+    #         #     package='controller_manager',
+    #         #     executable='spawner',
+    #         #     name='joint_state_broadcaster_spawner',
+    #         #     namespace=namespace,
+    #         #     output='screen',
+    #         #     arguments=['joint_state_broadcaster']
+    #         # )
+    #         # Launch jackal_control/control.launch.py
+    #         launch_jackal_control = IncludeLaunchDescription(
+    #                 PythonLaunchDescriptionSource(PathJoinSubstitution(
+    #                     [FindPackageShare('jackal_control'), 'launch', 'control.launch.py']
+    #                 )),
+    #                 launch_arguments=[('robot_description_command', robot_description_command),
+    #                                 ('is_sim', 'True'),
+    #                                 ('namespace', namespace)]
+    #             )
+    #             # Launch jackal_control/teleop_base.launch.py which is various ways to tele-op
+    #         # the robot but does not include the joystick. Also, has a twist mux.
+    #         launch_jackal_teleop_base = IncludeLaunchDescription(
+    #             PythonLaunchDescriptionSource(PathJoinSubstitution(
+    #             [FindPackageShare('jackal_control'), 'launch', 'teleop_base.launch.py'])),
+    #             launch_arguments=[('namespace', namespace)]
+    #             )
 
-            control_jackal_event = RegisterEventHandler(
-                event_handler=OnProcessExit(
-                    target_action=last_action,
-                    on_exit=[launch_jackal_control,
-                             launch_jackal_teleop_base],
-                )
-            )
-            ld.add_action(control_jackal_event)
+    #         control_jackal_event = RegisterEventHandler(
+    #             event_handler=OnProcessExit(
+    #                 target_action=last_action,
+    #                 on_exit=[launch_jackal_control,
+    #                          launch_jackal_teleop_base],
+    #             )
+    #         )
+    #         ld.add_action(control_jackal_event)
 
     return ld

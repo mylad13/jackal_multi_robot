@@ -153,3 +153,6 @@ Still working on a solution to this problem... I think the solution is in the wa
 ---
 
 - Dev Containers extension for VSCode may be helpful in working with docker containers.
+
+---
+Useful information on namespaces, node names, and tf2 mapping for simulating multiple robots [here](https://www.learnros2.com/ros/tutorials/multiple-robotic-arms-simulation-demo).
