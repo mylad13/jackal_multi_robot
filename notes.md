@@ -95,6 +95,10 @@ https://github.com/MISTLab/Swarm-SLAM/issues/2
 Good information about control of robots in Gazebo using ros2_control [here](https://articulatedrobotics.xyz/tutorials/mobile-robot/applications/ros2_control-concepts/).
 An example launch file for ros2_control is [here](https://github.com/ros-controls/ros2_control_demos/blob/humble/example_2/bringup/launch/diffbot.launch.py).
 IMPORTANT: Install [ros2_controllers for humble](https://control.ros.org/humble/doc/getting_started/getting_started.html)
+Installing teleop_twist_keyboard:
+```bash
+apt-get install ros-humble-teleop-twist-keyboard
+```
 using keyboard teleop, make sure to set the topic and stamped parameters correctly:
 ```bash
 ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args --remap cmd_vel:=my_cmd_vel -p stamped:=True 

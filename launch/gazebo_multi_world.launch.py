@@ -233,17 +233,17 @@ def generate_launch_description():
                 )
                 # Launch jackal_control/teleop_base.launch.py which is various ways to tele-op
             # the robot but does not include the joystick. Also, has a twist mux.
-            launch_jackal_teleop_base = IncludeLaunchDescription(
-                PythonLaunchDescriptionSource(PathJoinSubstitution(
-                [FindPackageShare('jackal_control'), 'launch', 'teleop_base.launch.py'])),
-                launch_arguments=[('namespace', namespace)]
-                )
+            # launch_jackal_teleop_base = IncludeLaunchDescription(
+            #     PythonLaunchDescriptionSource(PathJoinSubstitution(
+            #     [FindPackageShare('jackal_control'), 'launch', 'teleop_base.launch.py'])),
+            #     launch_arguments=[('namespace', namespace)]
+            #     )
 
             control_jackal_event = RegisterEventHandler(
                 event_handler=OnProcessExit(
                     target_action=last_action,
-                    on_exit=[launch_jackal_control,
-                             launch_jackal_teleop_base],
+                    on_exit=[launch_jackal_control],
+                            #  launch_jackal_teleop_base],
                 )
             )
             ld.add_action(control_jackal_event)
