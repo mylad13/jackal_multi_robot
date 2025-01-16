@@ -89,7 +89,7 @@ def generate_launch_description():
         for j in range(ROWS):
             # Construct a unique name and namespace
             name = "jackal" + str(i) + "_" + str(j)
-            namespace = "/jc" + str(i) + "_" + str(j)
+            namespace = "jc" + str(i) + "_" + str(j)
             frame_prefix = [namespace, '/']
 
             # Get URDF via xacro
@@ -117,11 +117,10 @@ def generate_launch_description():
             # Create state publisher node for that instance
             jackal_state_publisher = Node(
                 package="robot_state_publisher",
-                namespace=namespace,
+                # namespace=namespace,
                 executable="robot_state_publisher",
                 output="screen",
                 parameters=[{"use_sim_time": False, # This was set to false in the original implementation, why?
-                            # }],
                              "publish_frequency": 10.0,
                              'robot_description': robot_description_content}],
                             #  'frame_prefix': ''.join(frame_prefix)}],
