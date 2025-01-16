@@ -89,7 +89,7 @@ def generate_launch_description():
         for j in range(ROWS):
             # Construct a unique name and namespace
             name = "jackal" + str(i) + "_" + str(j)
-            namespace = "/jc" + str(i) + "_" + str(j)
+            namespace = "jc" + str(i) + "_" + str(j)
             frame_prefix = [namespace, '/']
 
             # Get URDF via xacro
