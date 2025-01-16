@@ -124,7 +124,7 @@ def generate_launch_description():
                             # }],
                              "publish_frequency": 10.0,
                              'robot_description': robot_description_content,
-                             'frame_prefix': frame_prefix}],
+                             'frame_prefix': frame_prefix.join()}],
                 remappings=remappings,
             )
 
