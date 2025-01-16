@@ -53,13 +53,6 @@ def generate_launch_description():
         jackal_multi_robot, "worlds", "multi_empty_world.sdf"
     )
 
-    ## Jackal world file 
-    # world = PathJoinSubstitution(
-    #     [FindPackageShare('jackal_gazebo'),
-    #     'worlds',
-    #     'jackal_race.world'],
-    # )
-
     config_jackal_velocity_controller = PathJoinSubstitution(
         [FindPackageShare('jackal_control'), 'config', 'control.yaml']
     )
