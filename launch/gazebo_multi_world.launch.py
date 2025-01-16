@@ -90,6 +90,7 @@ def generate_launch_description():
             # Construct a unique name and namespace
             name = "jackal" + str(i) + "_" + str(j)
             namespace = "/jc" + str(i) + "_" + str(j)
+            frame_prefix = [namespace, '/']
 
             # Get URDF via xacro
             robot_description_command = [
@@ -122,7 +123,8 @@ def generate_launch_description():
                 parameters=[{"use_sim_time": False, # This was set to false in the original implementation, why?
                             # }],
                              "publish_frequency": 10.0,
-                             'robot_description': robot_description_content}],
+                             'robot_description': robot_description_content,
+                             'frame_prefix': frame_prefix}],
                 remappings=remappings,
             )
 
