@@ -120,9 +120,9 @@ def generate_launch_description():
                 executable="robot_state_publisher",
                 output="screen",
                 parameters=[{"use_sim_time": False, # This was set to false in the original implementation, why?
-                            }],
-                            #  "publish_frequency": 10.0,
-                            #  'robot_description': robot_description_content}],
+                            # }],
+                             "publish_frequency": 10.0,
+                             'robot_description': robot_description_content}],
                 remappings=remappings,
             )
 
@@ -157,6 +157,8 @@ def generate_launch_description():
                 # Call add_action directly for the first robot to facilitate chain instantiation via RegisterEventHandler
                 ld.add_action(jackal_state_publisher)
                 ld.add_action(spawn_jackal)
+                print("Spawned jackal with name: ", name)
+
                 
             else:
                 # Use RegisterEventHandler to ensure next robot creation happens only after the previous one is completed.
@@ -169,7 +171,7 @@ def generate_launch_description():
                     )
                 )
                 ld.add_action(spawn_jackal_event)
-                print("Spawned jackal at x: ", x, " y: ", y)
+                print("Spawned jackal with name: ", name)
 
             # Save last instance for next RegisterEventHandler
             last_action = spawn_jackal
