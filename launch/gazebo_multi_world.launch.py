@@ -143,7 +143,7 @@ def generate_launch_description():
                     "-y",
                     str(y),
                     "-z",
-                    "0.11",
+                    "0.25",
                     "-Y",
                     "3.14159",
                     "-unpause",
