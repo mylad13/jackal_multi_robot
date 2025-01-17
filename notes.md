@@ -94,9 +94,11 @@ Installing teleop_twist_keyboard:
 ```bash
 apt-get install ros-humble-teleop-twist-keyboard
 ```
-using keyboard teleop, make sure to set the topic and stamped parameters correctly:
+using keyboard teleop, make sure to set the topic and stamped parameters correctly. for example:
 ```bash
-ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args --remap cmd_vel:=my_cmd_vel -p stamped:=True 
+ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args --remap cmd_vel:=/jc0_0/jackal_velocity_controller/cmd_vel_unstamped
+or
+ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args --remap cmd_vel:=<stamped_cmd_topic> -p stamped:=True 
 ```
 ---
 # Starting from the container mylad13/humble-ros2controllers
@@ -110,7 +112,7 @@ sudo docker exec -it <container name> bash
 ```
 [Guide to running GUI apps in linux docker container from windows host](https://medium.com/@potatowagon/how-to-use-gui-apps-in-linux-docker-container-from-windows-host-485d3e1c64a3).
 
-*This step can be skipped, it's already done: ros-humble-ros2-controllers and ros-humble-ros2-control are installed from binary, and the humble branch of gz_ros2_control is installed from source*. If starting from a container that does not have ros2_ws:
+*This step can be skipped, it's already done: ros-humble-ros2-controllers and ros-humble-ros2-control are installed from binary, and the humble branch of gz_ros2_control is installed from source. Instead of cloning, make sure to pull the desired version of the jackal and jackal_multi_robot github repos*. If starting from a container that does not have ros2_ws:
 ```bash
 mkdir -p ~/ros2_ws/src
 ```
