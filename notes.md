@@ -126,7 +126,7 @@ or
 colcon build --symlink-install
 source ~/ros2_ws/install/setup.bash
 ```
-You don't need to execute colcon build every time you change your python code if you include the option --symlink-install.
+You don't need to execute colcon build every time you change your python code if you include the option --symlink-install. But remember to always source ~/ros2_ws/install/setup.bash when you add new packages to the workspace.
 
 ---
 
