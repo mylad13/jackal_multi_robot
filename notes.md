@@ -8,7 +8,7 @@
      pip3 install empy==3.3.4
 
 ### Docker installation 
-*Skip these steps if you have access to the repository on docker hub*
+*Skip these steps if you have access to the humble-ros2controllers repository on docker hub*
 Following their instructions, I built the docker container. Simply running these commands leads to error, because some requirements are not met?
 ```bash 
 git clone https://github.com/lajoiepy/cslam_experiments.git
@@ -101,8 +101,14 @@ or
 ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args --remap cmd_vel:=<stamped_cmd_topic> -p stamped:=True 
 ```
 ---
+
 # Starting from the container mylad13/humble-ros2controllers
 ### mylad13/jackal_multi_robot repo and mylad13/jackal repo
+If you get errors when trying to see GUI application on your host device (linux), first run
+```bash
+xhost +
+```
+then, run the following:
 ```bash
 sudo docker run -itd --gpus all -v /dev:/dev -e NVIDIA_DRIVER_CAPABILITIES=all --rm --ipc host --net host --pid host --name <container name> <image name>
 ```
