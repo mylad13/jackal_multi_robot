@@ -73,7 +73,7 @@ def generate_launch_description():
     ld.add_action(gzserver_cmd)
     # ld.add_action(gzclient_cmd)
 
-    ROWS = 3
+    ROWS = 1
     COLS = 1
 
     x = -ROWS
@@ -137,8 +137,8 @@ def generate_launch_description():
                     f"robot_description",
                     "-name",
                     name,
-                    # "-x",
-                    # str(x),
+                    "-x",
+                    str(x),
                     "-y",
                     str(y),
                     "-z",
