@@ -133,8 +133,9 @@ def generate_launch_description():
                 executable="create",
                 namespace=namespace,
                 arguments=[
-                    "-string",
-                    robot_description_command,
+                    "-file",
+                    PathJoinSubstitution(
+                    [FindPackageShare('jackal_description'), 'urdf', 'jackal.urdf.xacro']),
                     # "-topic",
                     # f"robot_description",
                     # f"{namespace}/robot_description",
