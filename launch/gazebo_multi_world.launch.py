@@ -133,9 +133,11 @@ def generate_launch_description():
                 executable="create",
                 namespace=namespace,
                 arguments=[
-                    "-topic",
+                    "-string",
+                    robot_description_content,
+                    # "-topic",
                     # f"robot_description",
-                    f"{namespace}/robot_description",
+                    # f"{namespace}/robot_description",
                     "-name",
                     name,
                     "-x",
