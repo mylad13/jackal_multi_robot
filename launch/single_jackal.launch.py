@@ -161,7 +161,7 @@ def generate_launch_description():
     # Add the velocity_controller spawner
     velocity_controller_node = Node(
         package='controller_manager',
-        executable='spawner.py',
+        executable='spawner',
         name='velocity_controller_spawner',
         output='screen',
         arguments=['jackal_velocity_controller'],
@@ -172,7 +172,7 @@ def generate_launch_description():
     # Add the joint_state_broadcaster spawner
     joint_state_broadcaster_node = Node(
         package='controller_manager',
-        executable='spawner.py',
+        executable='spawner',
         name='joint_state_broadcaster_spawner',
         output='screen',
         arguments=['joint_state_broadcaster'],
