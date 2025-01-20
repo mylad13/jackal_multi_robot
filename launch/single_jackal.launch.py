@@ -158,35 +158,39 @@ def generate_launch_description():
             'control.yaml'],
         )
     
-    # Add the velocity_controller spawner
-    velocity_controller_node = Node(
-        package='controller_manager',
-        executable='spawner',
-        name='velocity_controller_spawner',
-        output='screen',
-        arguments=['jackal_velocity_controller'],
-        parameters=[config_jackal_velocity_controller]
-    )
+    # # Add the velocity_controller spawner
+    # velocity_controller_node = Node(
+    #     package='controller_manager',
+    #     executable='spawner',
+    #     name='velocity_controller_spawner',
+    #     output='screen',
+    #     arguments=['jackal_velocity_controller'],
+    #     parameters=[config_jackal_velocity_controller]
+    # )
 
 
-    # Add the joint_state_broadcaster spawner
-    joint_state_broadcaster_node = Node(
-        package='controller_manager',
-        executable='spawner',
-        name='joint_state_broadcaster_spawner',
-        output='screen',
-        arguments=['joint_state_broadcaster'],
-        parameters=[config_jackal_velocity_controller]
-    )
+    # # Add the joint_state_broadcaster spawner
+    # joint_state_broadcaster_node = Node(
+    #     package='controller_manager',
+    #     executable='spawner',
+    #     name='joint_state_broadcaster_spawner',
+    #     output='screen',
+    #     arguments=['joint_state_broadcaster'],
+    #     parameters=[config_jackal_velocity_controller]
+    # )
+
+    
     # Launch jackal_control/control.launch.py
-    # launch_jackal_control = IncludeLaunchDescription(
-    #         PythonLaunchDescriptionSource(PathJoinSubstitution(
-    #             [FindPackageShare('jackal_control'), 'launch', 'control.launch.py']
-    #         )),
-    #         launch_arguments=[('robot_description_command', robot_description_command),
-    #                         ('is_sim', 'True')]
-    #     )
-        # Launch jackal_control/teleop_base.launch.py which is various ways to tele-op
+    launch_jackal_control = IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(PathJoinSubstitution(
+                [FindPackageShare('jackal_control'), 'launch', 'control.launch.py']
+            )),
+            launch_arguments=[('robot_description_command', robot_description_command),
+                            ('is_sim', 'True')]
+        )
+    
+    
+    # Launch jackal_control/teleop_base.launch.py which is various ways to tele-op
     # the robot but does not include the joystick. Also, has a twist mux.
     # launch_jackal_teleop_base = IncludeLaunchDescription(
     #     PythonLaunchDescriptionSource(PathJoinSubstitution(
@@ -197,10 +201,11 @@ def generate_launch_description():
     control_jackal_event = RegisterEventHandler(
         event_handler=OnProcessExit(
             target_action=last_action,
-            on_exit=[velocity_controller_node, joint_state_broadcaster_node],
+            on_exit=[launch_jackal_control]
+                # velocity_controller_node, joint_state_broadcaster_node],
                     #  launch_jackal_teleop_base],
         )
     )
-    # ld.add_action(control_jackal_event)
+    ld.add_action(control_jackal_event)
 
     return ld
