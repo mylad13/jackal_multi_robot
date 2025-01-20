@@ -74,7 +74,7 @@ def generate_launch_description():
     # ld.add_action(gzclient_cmd)
 
     ROWS = 1
-    COLS = 1
+    COLS = 2
 
     x = -ROWS
     y = -COLS
