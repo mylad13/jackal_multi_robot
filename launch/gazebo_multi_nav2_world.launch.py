@@ -70,10 +70,12 @@ def generate_launch_description():
             package_dir, 'rviz', 'multi_nav2_default_view.rviz'),
         description='Full path to the RVIZ config file to use')
 
-
     world = os.path.join(
-        get_package_share_directory('jackal_multi_robot'),
-        'worlds', 'multi_robot_world.world')
+            get_package_share_directory('jackal_multi_robot'),
+            'worlds', 'multi_empty_world.sdf')
+    # world = os.path.join(
+    #     get_package_share_directory('jackal_multi_robot'),
+    #     'worlds', 'multi_robot_world.world')
     
     config_jackal_velocity_controller = PathJoinSubstitution(
             [FindPackageShare('jackal_control'), 'config', 'control.yaml']
