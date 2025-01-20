@@ -237,19 +237,14 @@ def generate_launch_description():
             #     [FindPackageShare('jackal_control'), 'launch', 'teleop_base.launch.py'])),
             #     launch_arguments=[('namespace', namespace)]
             #     )
-            if last_action is spawn_jackal:
-                ld.add_action(launch_jackal_control)
-            else:
 
-                control_jackal_event = RegisterEventHandler(
-                    event_handler=OnProcessExit(
-                        target_action=last_action,
-                        on_exit=[launch_jackal_control],
-                                #  launch_jackal_teleop_base],
-                    )
+            control_jackal_event = RegisterEventHandler(
+                event_handler=OnProcessExit(
+                    target_action=last_action,
+                    on_exit=[launch_jackal_control],
+                            #  launch_jackal_teleop_base],
                 )
-                last_action = launch_jackal_control
-
-                ld.add_action(control_jackal_event)
+            )
+            ld.add_action(control_jackal_event)
 
     return ld
