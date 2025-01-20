@@ -164,7 +164,8 @@ def generate_launch_description():
         executable='spawner.py',
         name='velocity_controller_spawner',
         output='screen',
-        arguments=['jackal_velocity_controller']
+        arguments=['jackal_velocity_controller'],
+        parameters=[config_jackal_velocity_controller]
     )
 
 
@@ -174,7 +175,8 @@ def generate_launch_description():
         executable='spawner.py',
         name='joint_state_broadcaster_spawner',
         output='screen',
-        arguments=['joint_state_broadcaster']
+        arguments=['joint_state_broadcaster'],
+        parameters=[config_jackal_velocity_controller]
     )
     # Launch jackal_control/control.launch.py
     # launch_jackal_control = IncludeLaunchDescription(
