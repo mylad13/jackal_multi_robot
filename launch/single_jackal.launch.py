@@ -201,6 +201,6 @@ def generate_launch_description():
                     #  launch_jackal_teleop_base],
         )
     )
-    ld.add_action(control_jackal_event)
+    # ld.add_action(control_jackal_event)
 
     return ld
