@@ -134,7 +134,7 @@ def generate_launch_description():
                 namespace=namespace,
                 arguments=[
                     "-string",
-                    robot_description_content,
+                    robot_description_command,
                     # "-topic",
                     # f"robot_description",
                     # f"{namespace}/robot_description",
