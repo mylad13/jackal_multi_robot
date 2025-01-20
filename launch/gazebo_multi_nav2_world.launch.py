@@ -268,7 +268,7 @@ def generate_launch_description():
             ', z: 0.1}, orientation: {x: 0.0, y: 0.0, z: 0.0, w: 1.0000000}}, }}'
 
         initial_pose_cmd = ExecuteProcess(
-            cmd=['ros2', 'topic', 'pub', '-t', '3', '--qos-reliability', 'reliable', namespace + ['/initialpose'],
+            cmd=['ros2', 'topic', 'pub', '-t', '3', '--qos-reliability', 'reliable', namespace + '/initialpose',
                 'geometry_msgs/PoseWithCovarianceStamped', message],
             output='screen'
         )
