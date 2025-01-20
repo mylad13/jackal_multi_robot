@@ -132,7 +132,7 @@ def generate_launch_description():
     remappings = [('/tf', 'tf'), ('/tf_static', 'tf_static')]
 
     last_action = None
-    # Spawn turtlebot3 instances in gazebo
+    # Spawn jackal instances in gazebo
     for robot in robots:
 
         name = robot['name']
@@ -223,7 +223,7 @@ def generate_launch_description():
         else:
             # Use RegisterEventHandler to ensure next robot creation happens only after the previous one is completed.
             # Simply calling ld.add_action for spawn_entity introduces issues due to parallel run.
-            spawn_turtlebot3_event = RegisterEventHandler(
+            spawn_jackal_event = RegisterEventHandler(
                 event_handler=OnProcessExit(
                     target_action=last_action,
                     on_exit=[spawn_jackal,
@@ -232,7 +232,7 @@ def generate_launch_description():
                 )
             )
 
-            ld.add_action(spawn_turtlebot3_event)
+            ld.add_action(spawn_jackal_event)
 
         # Save last instance for next RegisterEventHandler
         last_action = spawn_jackal
