@@ -58,7 +58,7 @@ def generate_launch_description():
     )
 
     
-    jackal_multi_robot = get_package_share_directory("jackal_multi_robot")
+    # jackal_multi_robot = get_package_share_directory("jackal_multi_robot")
 
     package_dir = get_package_share_directory('jackal_multi_robot')
     nav_launch_dir = os.path.join(package_dir, 'launch', 'nav2_bringup')
@@ -136,7 +136,7 @@ def generate_launch_description():
     for robot in robots:
 
         name = robot['name']
-        namespace = [ '/' + robot['name'] ]
+        namespace = '/' + robot['name']
         frame_prefix = [namespace, '/']
 
         # Get URDF via xacro
