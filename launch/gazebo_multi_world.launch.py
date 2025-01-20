@@ -113,15 +113,6 @@ def generate_launch_description():
                 Command(robot_description_command),
                 value_type=str
             )
-            # Read the URDF file content
-            urdf_file_path = PathJoinSubstitution([
-                FindPackageShare('jackal_description'),
-                'urdf',
-                'jackal.urdf.xacro'
-            ])
-            with open(urdf_file_path.perform(None), 'r') as urdf_file:
-                robot_description = urdf_file.read()
-
 
             # Create state publisher node for that instance
             jackal_state_publisher = Node(
@@ -142,8 +133,6 @@ def generate_launch_description():
                 executable="create",
                 namespace=namespace,
                 arguments=[
-                    "-string",
-                    robot_description,
                     "-topic",
                     f"robot_description",
                     "-name",
