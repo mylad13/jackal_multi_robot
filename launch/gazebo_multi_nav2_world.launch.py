@@ -18,7 +18,7 @@ import os
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, RegisterEventHandler
+from launch.actions import DeclareLaunchArgument, RegisterEventHandler, SetEnvironmentVariable
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution, FindExecutable, Command, EnvironmentVariable
 from launch_ros.substitutions import FindPackageShare
 from launch_ros.parameter_descriptions import ParameterValue
@@ -28,6 +28,7 @@ from launch_ros.actions import Node
 from launch.event_handlers import OnProcessExit
 from launch.conditions import IfCondition
 import launch.logging
+from pathlib import Path
 
 def generate_launch_description():
     ld = LaunchDescription()
@@ -42,6 +43,13 @@ def generate_launch_description():
         # ...
         ]
 
+    gz_resource_path = SetEnvironmentVariable(name='IGN_GAZEBO_RESOURCE_PATH', value=[
+                                                    EnvironmentVariable('IGN_GAZEBO_RESOURCE_PATH',
+                                                                        default_value=''),
+                                                    '/usr/share/gazebo-11/models/:',
+                                                    str(Path(get_package_share_directory('jackal_description')).
+                                                        parent.resolve())])
+    
     use_sim_time = LaunchConfiguration('use_sim_time', default='true')
     declare_use_sim_time = DeclareLaunchArgument(
         name='use_sim_time', default_value=use_sim_time, description='Use simulator time'
@@ -97,6 +105,7 @@ def generate_launch_description():
         description='Full path to the ROS2 parameters file to use for all launched nodes')
     
      
+    ld.add_action(gz_resource_path)
     ld.add_action(declare_use_sim_time)
     ld.add_action(declare_enable_drive)
     ld.add_action(declare_enable_rviz)
