@@ -137,7 +137,7 @@ def generate_launch_description():
                     PathJoinSubstitution([
                         FindPackageShare('jackal_description'),
                         'urdf',
-                        'jackal.urdf'
+                        'jackal.urdf.xacro'
                     ]),
                     # "-topic",
                     # f"robot_description",
