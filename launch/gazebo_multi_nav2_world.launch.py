@@ -242,7 +242,7 @@ def generate_launch_description():
     # Start rviz nodes and drive nodes after the last robot is spawned
     for robot in robots:
         name = robot['name']
-        namespace = [ '/' + robot['name'] ]
+        namespace = '/' + robot['name']
 
         # Get URDF via xacro
         robot_description_command = [
