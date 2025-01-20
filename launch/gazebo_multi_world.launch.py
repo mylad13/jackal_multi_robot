@@ -46,7 +46,6 @@ def generate_launch_description():
                                                         parent.resolve())])
     
     jackal_multi_robot = get_package_share_directory("jackal_multi_robot")
-    # launch_file_dir = os.path.join(turtlebot3_multi_robot, "launch")
 
     # Legacy Turtlebot3 world file (package renamed to jackal_mutli_robot)
     world = os.path.join(
