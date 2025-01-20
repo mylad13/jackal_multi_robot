@@ -105,25 +105,25 @@ def generate_launch_description():
 
     remappings = [('/tf', 'tf'),
                   ('/tf_static', 'tf_static')]
-    map_server=Node(package='nav2_map_server',
-        executable='map_server',
-        name='map_server',
-        output='screen',
-        parameters=[{'yaml_filename': os.path.join(get_package_share_directory('jackal_navigation'), 'maps', 'office.yaml'),
-                     },],
-        remappings=remappings)
+    # map_server=Node(package='nav2_map_server',
+    #     executable='map_server',
+    #     name='map_server',
+    #     output='screen',
+    #     parameters=[{'yaml_filename': os.path.join(get_package_share_directory('jackal_navigation'), 'maps', 'office.yaml'),
+    #                  },],
+    #     remappings=remappings)
 
-    map_server_lifecyle=Node(package='nav2_lifecycle_manager',
-            executable='lifecycle_manager',
-            name='lifecycle_manager_map_server',
-            output='screen',
-            parameters=[{'use_sim_time': use_sim_time},
-                        {'autostart': True},
-                        {'node_names': ['map_server']}])
+    # map_server_lifecyle=Node(package='nav2_lifecycle_manager',
+    #         executable='lifecycle_manager',
+    #         name='lifecycle_manager_map_server',
+    #         output='screen',
+    #         parameters=[{'use_sim_time': use_sim_time},
+    #                     {'autostart': True},
+    #                     {'node_names': ['map_server']}])
 
 
-    ld.add_action(map_server)
-    ld.add_action(map_server_lifecyle)
+    # ld.add_action(map_server)
+    # ld.add_action(map_server_lifecyle)
 
     ######################
 
@@ -137,7 +137,7 @@ def generate_launch_description():
 
         name = robot['name']
         namespace = str('/' + robot['name'])
-        # frame_prefix = [namespace, '/']
+        frame_prefix = [namespace, '/']
 
         # Get URDF via xacro
         robot_description_command = [
@@ -169,8 +169,8 @@ def generate_launch_description():
             output="screen",
             parameters=[{"use_sim_time": use_sim_time, # This was set to false in the original implementation, why?
                             "publish_frequency": 10.0,
-                            'robot_description': robot_description_content}
-                            # 'frame_prefix': ''.join(frame_prefix)}
+                            'robot_description': robot_description_content,
+                            'frame_prefix': ''.join(frame_prefix)}
                             ],
             remappings=remappings,
         )
